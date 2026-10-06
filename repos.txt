@@ -1,4 +1,4 @@
 # One SAAF agent repo per line (owner/name). Each repo should carry an agent.yaml.
 # Until it does, a seed manifest in manifests/<owner>__<name>.yaml is used instead.
-SAAF-Project/RCM-Builder-UC-7
-SAAF-Project/Audit-Work-Program-Agent-UC-8
+SAAF-Project/RCM-Builder
+SAAF-Project/Audit-Work-Program-Agent-UC-8-

@@ -1,11 +1,11 @@
 name: Work Program
-repo: SAAF-Project/Audit-Work-Program-Agent-UC-8
+repo: SAAF-Project/Audit-Work-Program-Agent-UC-8-
 island: Planning
 maturity: Ready        # Draft workplan | Building | QA Assessment | Ready
 category: Compliance
 language: Python
 depends_on:
-  - SAAF-Project/RCM-Builder-UC-7
+  - SAAF-Project/RCM-Builder
 tags: [audit, work-program, anthropic]
 open_slots: 0
 description: Create audit work program based on the delivered risk-control matrix from UC 7.
