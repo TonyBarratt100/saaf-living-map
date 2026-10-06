@@ -9,3 +9,12 @@ depends_on:
 tags: [audit, work-program, anthropic]
 open_slots: 0
 description: Create audit work program based on the delivered risk-control matrix from UC 7.
+
+# The approved mandate. Changing this requires a pull request.
+mandate:
+  purpose: Turn an approved UC7 risk-control matrix into a GIAS-compliant audit work program.
+  allowed_tools: [read_rcm, write_workprogram, claude_api]
+  forbidden_actions: [send_email, modify_source_data, change_own_config]
+  trusted_inputs: [rcm_from_uc7]        # anything else is untrusted
+  max_runtime_minutes: 30
+  human_approval_required_for: [publishing final work program]
