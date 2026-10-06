@@ -11,6 +11,6 @@
 2. Script that reads manifests from a list of repos and writes map.json.
 3. Static page that renders map.json as the island map and an overview.
 
-Team: Tony Barratt, [add names]
+Team: Tony Barratt, Anja Nell, Bob McLaughlin
 
 See also: the mandate guard built on this schema, in [SAAF-Project/Audit-criteria PR #1](https://github.com/SAAF-Project/Audit-criteria/pull/1).
