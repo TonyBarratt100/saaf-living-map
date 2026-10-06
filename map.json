@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T09:21:00+00:00",
+  "generated_at": "2026-10-06T09:21:51+00:00",
   "islands": [
     "Planning",
     "Fieldwork",
@@ -33,7 +33,7 @@
       "Monitoring": 0,
       "Shared Infrastructure": 0
     },
-    "with_warnings": 1
+    "with_warnings": 0
   },
   "agents": [
     {
@@ -63,15 +63,19 @@
         "forbidden_actions": [
           {
             "action": "send_email",
-            "rationale": null
+            "rationale": "Communication with auditees goes through the auditor, not the agent."
           },
           {
             "action": "modify_source_data",
-            "rationale": null
+            "rationale": "Evidence must stay unchanged so the audit trail holds."
           },
           {
             "action": "change_own_config",
-            "rationale": null
+            "rationale": "Changes to this mandate go through a pull request."
+          },
+          {
+            "action": "scrape_whole_population",
+            "rationale": "Too large for the context window; work from the sample in the RCM."
           }
         ],
         "trusted_inputs": [
@@ -80,15 +84,14 @@
         "max_runtime_minutes": 30,
         "human_approval_required_for": [
           "publishing final work program"
-        ]
+        ],
+        "evidence_policy": "cite_only_given_context",
+        "sharing": "standard_is_shared_mandate_is_private"
       },
       "status": "mapped",
       "source_kind": "seed",
       "source": "manifests/SAAF-Project__Audit-Work-Program-Agent-UC-8.yaml",
-      "warnings": [
-        "forbidden actions without rationale: send_email, modify_source_data, change_own_config",
-        "mandate has no evidence policy"
-      ],
+      "warnings": [],
       "used_by": []
     },
     {
