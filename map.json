@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T09:12:01+00:00",
+  "generated_at": "2026-10-06T09:21:00+00:00",
   "islands": [
     "Planning",
     "Fieldwork",
@@ -33,7 +33,7 @@
       "Monitoring": 0,
       "Shared Infrastructure": 0
     },
-    "with_warnings": 0
+    "with_warnings": 1
   },
   "agents": [
     {
@@ -61,9 +61,18 @@
           "claude_api"
         ],
         "forbidden_actions": [
-          "send_email",
-          "modify_source_data",
-          "change_own_config"
+          {
+            "action": "send_email",
+            "rationale": null
+          },
+          {
+            "action": "modify_source_data",
+            "rationale": null
+          },
+          {
+            "action": "change_own_config",
+            "rationale": null
+          }
         ],
         "trusted_inputs": [
           "rcm_from_uc7"
@@ -76,7 +85,10 @@
       "status": "mapped",
       "source_kind": "seed",
       "source": "manifests/SAAF-Project__Audit-Work-Program-Agent-UC-8.yaml",
-      "warnings": [],
+      "warnings": [
+        "forbidden actions without rationale: send_email, modify_source_data, change_own_config",
+        "mandate has no evidence policy"
+      ],
       "used_by": []
     },
     {
