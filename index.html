@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAAF Living Map</title>
+<style>
+:root{
+  --bg:#f6f5f1;--panel:#ffffff;--ink:#1d1f23;--muted:#6b6f76;--line:#e3e1da;
+  --accent:#0f6b5c;--warn:#b5560b;--warn-bg:#fdf1e6;
+  --m0:#9aa0a6;--m1:#d08a1e;--m2:#3a78c4;--m3:#1f8a5b;
+  --ghost:#f0eee8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#15171a;--panel:#1e2125;--ink:#eceae4;--muted:#9a9ea5;--line:#30343a;
+  --accent:#4cc3a8;--warn:#f0a35c;--warn-bg:#3a2717;
+  --m0:#80868d;--m1:#e0a040;--m2:#6aa2e8;--m3:#4cc38a;--ghost:#24272b;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:28px 24px 8px;max-width:1280px;margin:auto}
+h1{margin:0;font-size:26px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:4px 0 0}
+main{max-width:1280px;margin:auto;padding:8px 24px 48px}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px}
+.stat b{display:block;font-size:22px}
+.stat span{color:var(--muted);font-size:13px}
+.pipe{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--line);margin:4px 0 6px}
+.pipe i{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 14px}
+.controls input{flex:1 1 220px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.islands{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.island{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;min-height:120px}
+.island h2{font-size:15px;margin:0 0 10px;display:flex;justify-content:space-between}
+.island h2 small{color:var(--muted);font-weight:400}
+.empty{color:var(--muted);font-size:13px;font-style:italic}
+.card{display:block;width:100%;text-align:left;border:1px solid var(--line);border-left:4px solid var(--m0);background:var(--bg);color:var(--ink);border-radius:8px;padding:9px 11px;margin-bottom:8px;cursor:pointer;font:inherit}
+.card:hover,.card:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.card.dim{opacity:.3}
+.card.hl{outline:2px solid var(--accent)}
+.card .t{font-weight:600}
+.card .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:1px}
+.badge.w{background:var(--warn-bg);color:var(--warn)}
+.badge.s{background:var(--ghost);color:var(--muted)}
+.card.ghost{border-style:dashed;border-left-style:dashed;background:var(--ghost)}
+#detail{position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--panel);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(0,0,0,.12);padding:22px;overflow:auto;transform:translateX(100%);transition:transform .2s}
+#detail.open{transform:none}
+#detail h3{margin:0 0 4px;font-size:20px}
+#detail dl{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:14px;margin:14px 0}
+#detail dt{color:var(--muted)}
+#detail dd{margin:0}
+#detail h4{margin:18px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.mandate{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.mandate .row{margin:4px 0}
+.pill{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin:2px 4px 2px 0}
+.pill.no{border-color:var(--warn);color:var(--warn)}
+.warns{list-style:none;padding:0;margin:0}
+.warns li{background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:5px 9px;margin-bottom:5px;font-size:13px}
+.link{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font:inherit;text-decoration:underline}
+.close{float:right;border:0;background:none;font-size:22px;color:var(--muted);cursor:pointer}
+footer{color:var(--muted);font-size:13px;margin-top:28px}
+a{color:var(--accent)}
+@media (max-width:600px){header,main{padding-left:16px;padding-right:16px}#detail dl{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>SAAF Living Map</h1>
+  <p class="sub">Every SAAF audit agent, built from the <code>agent.yaml</code> in its repo. Updates when a repo changes.</p>
+</header>
+<main>
+  <section class="stats" id="stats"></section>
+  <div class="pipe" id="pipe" aria-hidden="true"></div>
+  <div class="legend" id="legend"></div>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search agents, tags, repos…" aria-label="Search">
+    <span id="chips"></span>
+  </div>
+  <section class="islands" id="islands"></section>
+  <footer id="foot"></footer>
+</main>
+<aside id="detail" aria-live="polite"></aside>
+<script>
+const MCOL = ["var(--m0)","var(--m1)","var(--m2)","var(--m3)"];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let data, filter = {q:"", maturity:null, issues:false, slots:false}, selected = null;
+
+fetch("map.json", {cache:"no-store"}).then(r => r.json()).then(d => { data = d; render(); })
+  .catch(e => document.getElementById("islands").innerHTML = `<p class="empty">Could not load map.json (${esc(e)}).</p>`);
+
+function mcolor(m){ const i = data.maturity_levels.indexOf(m); return i < 0 ? "var(--m0)" : MCOL[i]; }
+function byRepo(r){ return data.agents.find(a => a.repo === r); }
+
+function render(){
+  const s = data.summary;
+  document.getElementById("stats").innerHTML = [
+    [s.mapped, "agents mapped"], [s.unmapped, "repos not yet mapped"],
+    [s.by_maturity["Ready"] || 0, "ready to reuse"], [s.open_slots, "open team slots"],
+    [s.with_warnings, "with mandate issues"]
+  ].map(([n,l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
+  const tot = s.mapped || 1;
+  document.getElementById("pipe").innerHTML = data.maturity_levels
+    .map((m,i) => `<i style="width:${100*(s.by_maturity[m]||0)/tot}%;background:${MCOL[i]}"></i>`).join("");
+  document.getElementById("legend").innerHTML = data.maturity_levels
+    .map((m,i) => `<span><span class="dot" style="background:${MCOL[i]}"></span>${esc(m)} · ${s.by_maturity[m]||0}</span>`).join("");
+  document.getElementById("chips").innerHTML =
+    data.maturity_levels.map(m => `<button class="chip" data-m="${esc(m)}" aria-pressed="${filter.maturity===m}">${esc(m)}</button>`).join(" ") +
+    ` <button class="chip" data-f="slots" aria-pressed="${filter.slots}">Open slots</button>` +
+    ` <button class="chip" data-f="issues" aria-pressed="${filter.issues}">Mandate issues</button>`;
+  drawIslands();
+  document.getElementById("foot").innerHTML =
+    `Generated ${esc(new Date(data.generated_at).toLocaleString())}. Add your agent: put an <code>agent.yaml</code> in its repo and add the repo to <code>repos.txt</code>.`;
+}
+
+function matches(a){
+  if (filter.maturity && a.maturity !== filter.maturity) return false;
+  if (filter.slots && !(a.open_slots > 0)) return false;
+  if (filter.issues && !(a.warnings||[]).length) return false;
+  if (filter.q){
+    const hay = [a.name,a.repo,a.description,a.category,a.language,...(a.tags||[])].join(" ").toLowerCase();
+    if (!hay.includes(filter.q)) return false;
+  }
+  return true;
+}
+
+function card(a){
+  const ghost = a.status !== "mapped";
+  const rel = selected && (selected.repo === a.repo || (selected.depends_on||[]).includes(a.repo) || (selected.used_by||[]).includes(a.repo));
+  const cls = ["card", ghost?"ghost":"", !matches(a)?"dim":"", rel?"hl":""].join(" ");
+  const meta = ghost ? esc(a.repo) :
+    [a.maturity, a.category, a.language, a.open_slots>0 ? `${a.open_slots} open slot${a.open_slots>1?"s":""}` : null].filter(Boolean).map(esc).join(" · ");
+  const badges = (a.warnings?.length && !ghost ? `<span class="badge w">${a.warnings.length} issue${a.warnings.length>1?"s":""}</span>` : "") +
+    (a.source_kind === "seed" ? `<span class="badge s">seed</span>` : "") + (ghost ? `<span class="badge s">not mapped</span>` : "");
+  return `<button class="${cls}" data-repo="${esc(a.repo)}" style="border-left-color:${ghost?"var(--line)":mcolor(a.maturity)}">
+    <div class="t">${esc(a.name)}${badges}</div><div class="meta">${meta}</div></button>`;
+}
+
+function drawIslands(){
+  const groups = data.islands.map(i => [i, data.agents.filter(a => a.status==="mapped" && a.island===i)]);
+  const other = data.agents.filter(a => a.status==="mapped" && !data.islands.includes(a.island));
+  if (other.length) groups.push(["Other", other]);
+  const ghosts = data.agents.filter(a => a.status!=="mapped");
+  if (ghosts.length) groups.push(["Not yet mapped", ghosts]);
+  document.getElementById("islands").innerHTML = groups.map(([name, list]) =>
+    `<div class="island"><h2>${esc(name)}<small>${list.length}</small></h2>${
+      list.length ? list.map(card).join("") : `<p class="empty">No agents yet — a gap worth a hackathon track.</p>`}</div>`).join("");
+}
+
+function showDetail(a){
+  selected = a; drawIslands();
+  const d = document.getElementById("detail");
+  const pills = (xs, no) => (xs||[]).map(x => `<span class="pill${no?" no":""}">${esc(x)}</span>`).join("") || "—";
+  const links = xs => (xs||[]).length ? xs.map(r => `<button class="link" data-repo="${esc(r)}">${esc(byRepo(r)?.name || r)}</button>`).join(", ") : "—";
+  const m = a.mandate || {};
+  d.innerHTML = `<button class="close" aria-label="Close">×</button>
+    <h3>${esc(a.name)}</h3>
+    <a href="https://github.com/${esc(a.repo)}" target="_blank" rel="noopener">${esc(a.repo)}</a>
+    ${a.status==="mapped" ? `<p>${esc(a.description)}</p>
+    <dl><dt>Island</dt><dd>${esc(a.island)}</dd>
+      <dt>Maturity</dt><dd><span class="dot" style="background:${mcolor(a.maturity)}"></span>${esc(a.maturity)}</dd>
+      <dt>Category</dt><dd>${esc(a.category||"—")}</dd><dt>Language</dt><dd>${esc(a.language||"—")}</dd>
+      <dt>Open slots</dt><dd>${esc(a.open_slots ?? 0)}</dd><dt>Tags</dt><dd>${pills(a.tags)}</dd>
+      <dt>Depends on</dt><dd>${links(a.depends_on)}</dd><dt>Used by</dt><dd>${links(a.used_by)}</dd>
+      <dt>Source</dt><dd>${a.source_kind==="seed" ? "seed manifest in this repo" : "agent.yaml in agent repo"}</dd></dl>
+    <h4>Mandate</h4>
+    ${a.mandate ? `<div class="mandate">
+      <div class="row">${esc(m.purpose||"")}</div>
+      <div class="row"><b>Allowed:</b> ${pills(m.allowed_tools)}</div>
+      <div class="row"><b>Forbidden:</b> ${pills(m.forbidden_actions,true)}</div>
+      <div class="row"><b>Trusted inputs:</b> ${pills(m.trusted_inputs)}</div>
+      <div class="row"><b>Max runtime:</b> ${m.max_runtime_minutes ? esc(m.max_runtime_minutes)+" min" : "—"}</div>
+      <div class="row"><b>Human approval for:</b> ${pills(m.human_approval_required_for)}</div></div>` : `<p class="empty">No mandate declared.</p>`}`
+    : `<p class="empty">This repo has no agent.yaml yet.</p><dl><dt>Used by</dt><dd>${links(a.used_by)}</dd></dl>`}
+    <h4>Checks</h4>
+    ${(a.warnings||[]).length ? `<ul class="warns">${a.warnings.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>` : `<p>All checks pass.</p>`}`;
+  d.classList.add("open");
+}
+
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-repo]");
+  if (c){ const a = byRepo(c.dataset.repo); if (a) showDetail(a); return; }
+  if (e.target.closest(".close")){ document.getElementById("detail").classList.remove("open"); selected=null; drawIslands(); return; }
+  const chip = e.target.closest(".chip");
+  if (chip){
+    if (chip.dataset.m) filter.maturity = filter.maturity===chip.dataset.m ? null : chip.dataset.m;
+    if (chip.dataset.f) filter[chip.dataset.f] = !filter[chip.dataset.f];
+    render();
+  }
+});
+document.addEventListener("keydown", e => { if (e.key==="Escape"){ document.getElementById("detail").classList.remove("open"); selected=null; drawIslands(); }});
+document.getElementById("q").addEventListener("input", e => { filter.q = e.target.value.trim().toLowerCase(); drawIslands(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "generated_at": "2026-10-06T09:09:41+00:00",
+  "islands": [
+    "Planning",
+    "Fieldwork",
+    "Reporting",
+    "AI Governance & QA",
+    "Monitoring",
+    "Shared Infrastructure"
+  ],
+  "maturity_levels": [
+    "Draft workplan",
+    "Building",
+    "QA Assessment",
+    "Ready"
+  ],
+  "summary": {
+    "agents": 2,
+    "mapped": 1,
+    "unmapped": 1,
+    "open_slots": 0,
+    "by_maturity": {
+      "Draft workplan": 0,
+      "Building": 0,
+      "QA Assessment": 0,
+      "Ready": 1
+    },
+    "by_island": {
+      "Planning": 1,
+      "Fieldwork": 0,
+      "Reporting": 0,
+      "AI Governance & QA": 0,
+      "Monitoring": 0,
+      "Shared Infrastructure": 0
+    },
+    "with_warnings": 0
+  },
+  "agents": [
+    {
+      "name": "Work Program",
+      "repo": "SAAF-Project/Audit-Work-Program-Agent-UC-8",
+      "island": "Planning",
+      "maturity": "Ready",
+      "category": "Compliance",
+      "language": "Python",
+      "depends_on": [
+        "SAAF-Project/RCM-Builder-UC-7"
+      ],
+      "tags": [
+        "audit",
+        "work-program",
+        "anthropic"
+      ],
+      "open_slots": 0,
+      "description": "Create audit work program based on the delivered risk-control matrix from UC 7.",
+      "mandate": {
+        "purpose": "Turn an approved UC7 risk-control matrix into a GIAS-compliant audit work program.",
+        "allowed_tools": [
+          "read_rcm",
+          "write_workprogram",
+          "claude_api"
+        ],
+        "forbidden_actions": [
+          "send_email",
+          "modify_source_data",
+          "change_own_config"
+        ],
+        "trusted_inputs": [
+          "rcm_from_uc7"
+        ],
+        "max_runtime_minutes": 30,
+        "human_approval_required_for": [
+          "publishing final work program"
+        ]
+      },
+      "status": "mapped",
+      "source_kind": "seed",
+      "source": "manifests/SAAF-Project__Audit-Work-Program-Agent-UC-8.yaml",
+      "warnings": [],
+      "used_by": []
+    },
+    {
+      "repo": "SAAF-Project/RCM-Builder-UC-7",
+      "name": "RCM-Builder-UC-7",
+      "status": "unmapped",
+      "warnings": [
+        "no agent.yaml in repo and no seed manifest"
+      ],
+      "used_by": [
+        "SAAF-Project/Audit-Work-Program-Agent-UC-8"
+      ]
+    }
+  ]
+}
