@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T15:55:54+00:00",
+  "generated_at": "2026-10-06T19:51:21+00:00",
   "islands": [
     "Planning",
     "Fieldwork",
@@ -38,13 +38,13 @@
   "agents": [
     {
       "name": "Work Program",
-      "repo": "SAAF-Project/Audit-Work-Program-Agent-UC-8",
+      "repo": "SAAF-Project/Audit-Work-Program-Agent-UC-8-",
       "island": "Planning",
       "maturity": "Ready",
       "category": "Compliance",
       "language": "Python",
       "depends_on": [
-        "SAAF-Project/RCM-Builder-UC-7"
+        "SAAF-Project/RCM-Builder"
       ],
       "tags": [
         "audit",
@@ -90,19 +90,19 @@
       },
       "status": "mapped",
       "source_kind": "seed",
-      "source": "manifests/SAAF-Project__Audit-Work-Program-Agent-UC-8.yaml",
+      "source": "manifests/SAAF-Project__Audit-Work-Program-Agent-UC-8-.yaml",
       "warnings": [],
       "used_by": []
     },
     {
-      "repo": "SAAF-Project/RCM-Builder-UC-7",
-      "name": "RCM-Builder-UC-7",
+      "repo": "SAAF-Project/RCM-Builder",
+      "name": "RCM-Builder",
       "status": "unmapped",
       "warnings": [
         "no agent.yaml in repo and no seed manifest"
       ],
       "used_by": [
-        "SAAF-Project/Audit-Work-Program-Agent-UC-8"
+        "SAAF-Project/Audit-Work-Program-Agent-UC-8-"
       ]
     }
   ]
