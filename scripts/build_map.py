@@ -53,6 +53,18 @@ def as_list(v):
     return v if isinstance(v, list) else [v]
 
 
+def normalize_forbidden(mandate):
+    """Accept plain names or {action, rationale} entries; return list of dicts."""
+    out = []
+    for f in as_list(mandate.get("forbidden_actions")):
+        if isinstance(f, dict):
+            out.append({"action": str(f.get("action", "")), "rationale": f.get("rationale")})
+        else:
+            out.append({"action": str(f), "rationale": None})
+    mandate["forbidden_actions"] = out
+    return out
+
+
 def check(m):
     """Return a list of human-readable warnings for one manifest."""
     w = [f"missing field: {f}" for f in REQUIRED if not m.get(f)]
@@ -65,7 +77,8 @@ def check(m):
         w.append("no mandate block")
         return w
     allowed = set(as_list(mandate.get("allowed_tools")))
-    forbidden = set(as_list(mandate.get("forbidden_actions")))
+    fl = normalize_forbidden(mandate)
+    forbidden = {f["action"] for f in fl}
     clash = allowed & forbidden
     if clash:
         w.append("tools both allowed and forbidden: " + ", ".join(sorted(clash)))
@@ -74,6 +87,11 @@ def check(m):
             w.append(f"mandate does not forbid {f}")
     if not mandate.get("trusted_inputs"):
         w.append("mandate lists no trusted inputs")
+    missing = [f["action"] for f in fl if not f["rationale"]]
+    if missing:
+        w.append("forbidden actions without rationale: " + ", ".join(missing))
+    if not mandate.get("evidence_policy"):
+        w.append("mandate has no evidence policy")
     if not mandate.get("human_approval_required_for"):
         w.append("mandate has no human approval step")
     if m.get("maturity") == "Ready" and not mandate.get("max_runtime_minutes"):
