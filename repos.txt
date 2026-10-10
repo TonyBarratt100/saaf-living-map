@@ -2,3 +2,20 @@
 # Until it does, a seed manifest in manifests/<owner>__<name>.yaml is used instead.
 SAAF-Project/RCM-Builder
 SAAF-Project/Audit-Work-Program-Agent-UC-8-
+SAAF-Project/GDPR-AI-Audit-Agent
+SAAF-Project/Vendor_Guard
+SAAF-Project/Track-2-Evidence-Collection-Extraction
+SAAF-Project/llm_owasp
+SAAF-Project/CUEC_Crosscheck
+SAAF-Project/WhatsTheNews
+SAAF-Project/ExecGRC
+SAAF-Project/Track-2---IAM-final
+SAAF-Project/Compliance-Report-Generator
+SAAF-Project/three-way-match-audit
+SAAF-Project/judging-found-controls
+SAAF-Project/Executive-Summary-Writer
+SAAF-Project/Compliance-Audit-Agent
+SAAF-Project/Audit-criteria
+SAAF-Project/OWASP-top-10-LLM-assessment
+SAAF-Project/SAAF-circuit-breaker
+SAAF-Project/hallucination-detection-agent
